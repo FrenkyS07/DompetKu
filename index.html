@@ -9,30 +9,55 @@
 </head>
 
 <body>
-    <header></header>
+    <header>
+        <div class="navbar-container">
+            <nav class="navbar-section">
+                <div class="nav-item">
+                    <a href="#Section-1">Input Transaksi</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#Section-2">Ringkasan Saldo</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#Section-3">Daftar Riwayat</a>
+                </div>
+            </nav>
+        </div>
+    </header>
     <main>
         <div class="container">
-            <section class="Section-1">
+            <section class="Section-1" id="Section-1">
                 <div class="card">
                     <div class="placeholder-dashboard">
-                        <div class="saldo">1.000.000</div>
-                        <hr>
+                        <div class="saldo">
+                            <h3>Saldo</h3>
+                            <h1 id="saldoAwal" class="text-blue">Rp0</h1>
+                        </div>
+                        <hr style="display: flex; width: 200px;align-self: center;">
                         <div class="transaksi">
-                            <div class="pemasukan">1.000.000</div>
+                            <div class="pemasukan">
+                                <p>Pemasukan</p>
+                                <h4 id="totalPemasukan" class="text-green">Rp0</h4>
+                            </div>
                             <hr>
-                            <div class="pengeluaran">1.000.000</div>
+                            <div class="pengeluaran">
+                                <p>Pengeluaran</p>
+                                <h4 id="totalPengeluaran" class="text-red">Rp0</h4>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
-            <section class="Section-2">
+            <section class="Section-2" id="Section-2">
                 <div class="card">
-                    <form action="" class="form-transaksi">
+                    <form onsubmit="event.preventDefault();onFormSubmit();" action="" class="form-transaksi">
                         <div class="Input-wrapper">
-                            <input type="text" id="nama-transaksi" class="input-transaksi" placeholder="Nama transaksi" required>
+                            <input type="text" id="namaTransaksi" class="input-transaksi" placeholder="Nama transaksi"
+                                required>
                         </div>
                         <div class="Input-wrapper">
-                            <input type="number" id="jumlah-uang" class="input-transaksi" placeholder="Jumlah Uang" required>
+                            <input type="text" id="jumlahUang" class="input-transaksi" placeholder="Jumlah Uang"
+                                required>
                         </div>
                         <div class="kelompok-transaksi">
                             <div class="select-wrapper">
@@ -48,22 +73,38 @@
                             <div class="select-wrapper">
                                 <select name="jenis" id="jenis" class="input-style">
                                     <option value="" disabled selected>Jenis</option>
-                                    <option value="pemasukan">Pemasukan</option>
-                                    <option value="pengeluaran">Pengeluaran</option>
+                                    <option value="pemasukan" id="pemasukan">Pemasukan</option>
+                                    <option value="pengeluaran" id="pengeluaran">Pengeluaran</option>
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" class="btn-submit">Submit</button>
+                        <button type="submit" value="submit" class="btn-submit">Submit</button>
                     </form>
                 </div>
             </section>
-            <section class="Section-3">
+            <section class="Section-3" id="Section-3">
                 <div class="card">
-
+                    <div class="card-history">
+                        <div class="table-wrapper">
+                            <table class="historyTable" id="tableTransaksi">
+                                <thead>
+                                    <tr>
+                                        <th>Nama transaksi</th>
+                                        <th>Jumlah Uang</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
     </main>
+
+    <script src="index.js"></script>
 </body>
 
 </html>
