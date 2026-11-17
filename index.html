@@ -1,103 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DompetKu - Manajemen Keuangan</title>
+    <!-- Font Modern: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
-    <title>Website DompetKu</title>
 </head>
 
 <body>
-    <header>
+    <header class="navbar">
         <div class="navbar-container">
+            <div class="brand">💳 Dompet<span>Ku</span></div>
             <nav class="navbar-section">
-                <div class="nav-item">
-                    <a href="#Section-1">Input Transaksi</a>
-                </div>
-                <div class="nav-item">
-                    <a href="#Section-2">Ringkasan Saldo</a>
-                </div>
-                <div class="nav-item">
-                    <a href="#Section-3">Daftar Riwayat</a>
-                </div>
+                <a href="#Section-1" class="nav-link">Ringkasan</a>
+                <a href="#Section-2" class="nav-link">Transaksi</a>
+                <a href="#Section-3" class="nav-link">Riwayat</a>
             </nav>
         </div>
     </header>
-    <main>
-        <div class="container">
-            <section class="Section-1" id="Section-1">
-                <div class="card">
-                    <div class="placeholder-dashboard">
-                        <div class="saldo">
-                            <h3>Saldo</h3>
-                            <h1 id="saldoAwal" class="text-blue">Rp0</h1>
-                        </div>
-                        <hr style="display: flex; width: 200px;align-self: center;">
-                        <div class="transaksi">
-                            <div class="pemasukan">
-                                <p>Pemasukan</p>
-                                <h4 id="totalPemasukan" class="text-green">Rp0</h4>
-                            </div>
-                            <hr>
-                            <div class="pengeluaran">
-                                <p>Pengeluaran</p>
-                                <h4 id="totalPengeluaran" class="text-red">Rp0</h4>
-                            </div>
-                        </div>
+
+    <main class="container">
+        <!-- SECTION 1: RINGKASAN SALDO -->
+        <section class="section-dashboard" id="Section-1">
+            <div class="dashboard-card">
+                <div class="saldo-box">
+                    <span class="label">Total Saldo Saat Ini</span>
+                    <h1 id="saldoAwal" class="saldo-amount text-blue">Rp 0</h1>
+                </div>
+                <div class="divider-horizontal"></div>
+                <div class="summary-grid">
+                    <div class="summary-item income-box">
+                        <span class="summary-label">↓ Pemasukan</span>
+                        <h4 id="totalPemasukan" class="summary-amount text-green">Rp 0</h4>
+                    </div>
+                    <div class="summary-item expense-box">
+                        <span class="summary-label">↑ Pengeluaran</span>
+                        <h4 id="totalPengeluaran" class="summary-amount text-red">Rp 0</h4>
                     </div>
                 </div>
-            </section>
-            <section class="Section-2" id="Section-2">
-                <div class="card">
-                    <form onsubmit="event.preventDefault();onFormSubmit();" action="" class="form-transaksi">
-                        <div class="Input-wrapper">
-                            <input type="text" id="namaTransaksi" class="input-transaksi" placeholder="Nama transaksi"
-                                required>
+            </div>
+        </section>
+
+        <!-- WRAPPER KONTEN UTAMA (2 Kolom di Desktop) -->
+        <div class="main-grid">
+            <!-- SECTION 2: FORM INPUT -->
+            <section class="section-form" id="Section-2">
+                <div class="content-card">
+                    <h2 class="card-title">Catat Transaksi</h2>
+                    <form onsubmit="event.preventDefault(); onFormSubmit();" class="form-transaksi">
+                        <div class="input-group">
+                            <label for="namaTransaksi">Keterangan</label>
+                            <input type="text" id="namaTransaksi" class="input-field" placeholder="Contoh: Makan Siang, Gaji..." required>
                         </div>
-                        <div class="Input-wrapper">
-                            <input type="text" id="jumlahUang" class="input-transaksi" placeholder="Jumlah Uang"
-                                required>
+
+                        <div class="input-group">
+                            <label for="jumlahUang">Nominal (Rp)</label>
+                            <input type="text" id="jumlahUang" class="input-field" placeholder="0" required>
                         </div>
+
                         <div class="kelompok-transaksi">
-                            <div class="select-wrapper">
-                                <select name="kategori" id="kategori" class="input-style">
-                                    <option value="" disabled selected>Kategori</option>
-                                    <option value="Gaji">Gaji</option>
-                                    <option value="Makanan">Makanan</option>
-                                    <option value="Transportasi">Transportasi</option>
-                                    <option value="Hiburan">Hiburan</option>
-                                    <option value="Elektronik">Elektronik</option>
-                                </select>
+                            <div class="input-group">
+                                <label for="kategori">Kategori</label>
+                                <div class="select-wrapper">
+                                    <select name="kategori" id="kategori" class="input-field select-field" required>
+                                        <option value="" disabled selected>Pilih Kategori</option>
+                                        <option value="Gaji">Gaji</option>
+                                        <option value="Makanan">Makanan</option>
+                                        <option value="Transportasi">Transportasi</option>
+                                        <option value="Hiburan">Hiburan</option>
+                                        <option value="Elektronik">Elektronik</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="select-wrapper">
-                                <select name="jenis" id="jenis" class="input-style">
-                                    <option value="" disabled selected>Jenis</option>
-                                    <option value="pemasukan" id="pemasukan">Pemasukan</option>
-                                    <option value="pengeluaran" id="pengeluaran">Pengeluaran</option>
-                                </select>
+
+                            <div class="input-group">
+                                <label for="jenis">Jenis</label>
+                                <div class="select-wrapper">
+                                    <select name="jenis" id="jenis" class="input-field select-field" required>
+                                        <option value="" disabled selected>Pilih Jenis</option>
+                                        <option value="pemasukan">Pemasukan</option>
+                                        <option value="pengeluaran">Pengeluaran</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                        <button type="submit" value="submit" class="btn-submit">Submit</button>
+
+                        <button type="submit" class="btn-submit">Simpan Transaksi</button>
                     </form>
                 </div>
             </section>
-            <section class="Section-3" id="Section-3">
-                <div class="card">
-                    <div class="card-history">
-                        <div class="table-wrapper">
-                            <table class="historyTable" id="tableTransaksi">
-                                <thead>
-                                    <tr>
-                                        <th>Nama transaksi</th>
-                                        <th>Jumlah Uang</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
+
+            <!-- SECTION 3: RIWAYAT TRANSAKSI -->
+            <section class="section-history" id="Section-3">
+                <div class="content-card history-card">
+                    <h2 class="card-title">Riwayat Transaksi</h2>
+                    <div class="table-wrapper">
+                        <table class="historyTable" id="tableTransaksi">
+                            <thead>
+                                <tr>
+                                    <th>Transaksi</th>
+                                    <th>Nominal</th>
+                                    <th class="desktop-only">Kategori</th>
+                                    <th class="desktop-only">Jenis</th>
+                                    <th style="text-align: right;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data dari JS masuk ke sini -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>

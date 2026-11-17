@@ -1,14 +1,13 @@
 var selectedRow = null;
 
-// 1. Panggil showData saat halaman selesai dimuat
 document.addEventListener('DOMContentLoaded', function () {
     showData();
     updateDashboard();
 });
 
 const inputUang = document.getElementById('jumlahUang');
-inputUang.addEventListener('keyup', function (e) {
-    let value = this.value.replace(/\./g, '');
+inputUang.addEventListener('keyup', function () {
+    let value = this.value.replace(/[^0-9]/g, '');
 
     if (value) {
         let format = parseInt(value).toLocaleString('id-ID');
@@ -26,10 +25,11 @@ function onFormSubmit() {
         return;
     }
 
-    if (selectedRow == null)
+    if (selectedRow == null) {
         insertNewRecord(formData);
-    else
+    } else {
         updateRecord(formData);
+    }
 
     resetForm();
     saveData();
@@ -37,7 +37,7 @@ function onFormSubmit() {
 
 function readFormData() {
     var formData = {};
-    formData["namaTransaksi"] = document.getElementById("namaTransaksi").value;
+    formData["namaTransaksi"] = document.getElementById("namaTransaksi").value.trim();
 
     var formatUang = document.getElementById("jumlahUang").value;
     formatUang = formatUang.replace(/\./g, '');
@@ -51,41 +51,41 @@ function insertNewRecord(data) {
     var table = document.getElementById("tableTransaksi").getElementsByTagName('tbody')[0];
     var newRow = table.insertRow(table.length);
 
-    //Nama
+    var nominalFormatted = parseInt(data.jumlahUang).toLocaleString('id-ID');
+
+    // Nama
     var cell1 = newRow.insertCell(0);
     cell1.innerHTML = data.namaTransaksi;
     cell1.classList.add("font-bold");
 
-    //Jumlah
+    // Jumlah & Warna Baris
     var cell2 = newRow.insertCell(1);
-    if (data.jenisTransaksi === "pemasukan") {
-        cell2.innerHTML = "+ Rp " + data.jumlahUang;
-        cell2.className = "text-green";
-    } else if (data.jenisTransaksi === "pengeluaran") {
-        cell2.innerHTML = "- Rp " + data.jumlahUang;
-        cell2.className = "text-red";
-    }
-
     if (data.jenisTransaksi.toLowerCase() === "pemasukan") {
-        newRow.classList.add("bg-green-row"); // Tambah class Hijau ke BARIS
+        cell2.innerHTML = "+ Rp " + nominalFormatted;
+        cell2.className = "text-green";
+        newRow.classList.add("bg-green-row");
     } else {
-        newRow.classList.add("bg-red-row");   // Tambah class Merah ke BARIS
+        cell2.innerHTML = "- Rp " + nominalFormatted;
+        cell2.className = "text-red";
+        newRow.classList.add("bg-red-row");
     }
 
-    //Kategori
+    // Kategori
     var cell3 = newRow.insertCell(2);
     cell3.innerHTML = data.kategoriTransaksi;
     cell3.className = "desktop-only";
 
-    //Jenis
+    // Jenis
     var cell4 = newRow.insertCell(3);
     cell4.innerHTML = data.jenisTransaksi;
     cell4.className = "desktop-only";
 
-    //Tombol Aksi
+    // Tombol Aksi
     var cell5 = newRow.insertCell(4);
-    cell5.innerHTML = `<a onclick="onEdit(this)" class="action-btn edit-btn" style="background:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; font-weight:bold;">Edit</a>
-                       <a onclick="onDelete(this)" class="action-btn delete-btn" style="background:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; font-weight:bold; color:red;">Delete</a>`;
+    cell5.innerHTML = `<div class="action-group">
+                           <button type="button" onclick="onEdit(this)" class="action-btn edit-btn">Edit</button>
+                           <button type="button" onclick="onDelete(this)" class="action-btn delete-btn">Hapus</button>
+                       </div>`;
 }
 
 function resetForm() {
@@ -96,13 +96,11 @@ function resetForm() {
     selectedRow = null;
 }
 
-function onEdit(td) {
-    selectedRow = td.parentElement.parentElement;
+function onEdit(btn) {
+    selectedRow = btn.closest('tr');
 
-    // Ambil data dari tabel ke form
     document.getElementById("namaTransaksi").value = selectedRow.cells[0].innerHTML;
 
-    // Bersihkan format "Rp", "+", "-" agar jadi angka murni
     var uangText = selectedRow.cells[1].innerHTML;
     var uangBersih = uangText.replace(/[^0-9]/g, '');
     document.getElementById("jumlahUang").value = parseInt(uangBersih).toLocaleString('id-ID');
@@ -111,9 +109,9 @@ function onEdit(td) {
     document.getElementById("jenis").value = selectedRow.cells[3].innerHTML;
 }
 
-function onDelete(td) {
-    if (confirm('Yakin ingin menghapus data ini?')) {
-        var row = td.parentElement.parentElement;
+function onDelete(btn) {
+    if (confirm('Yakin ingin menghapus transaksi ini?')) {
+        var row = btn.closest('tr');
         row.parentElement.removeChild(row);
         resetForm();
         saveData();
@@ -121,31 +119,33 @@ function onDelete(td) {
 }
 
 function updateRecord(formData) {
+    var nominalFormatted = parseInt(formData.jumlahUang).toLocaleString('id-ID');
+
     selectedRow.cells[0].innerHTML = formData.namaTransaksi;
+    selectedRow.classList.remove("bg-green-row", "bg-red-row");
 
     if (formData.jenisTransaksi.toLowerCase() === "pemasukan") {
-        selectedRow.cells[1].innerHTML = "+ Rp " + formData.jumlahUang;
+        selectedRow.cells[1].innerHTML = "+ Rp " + nominalFormatted;
         selectedRow.cells[1].className = "text-green";
+        selectedRow.classList.add("bg-green-row");
     } else {
-        selectedRow.cells[1].innerHTML = "- Rp " + formData.jumlahUang;
+        selectedRow.cells[1].innerHTML = "- Rp " + nominalFormatted;
         selectedRow.cells[1].className = "text-red";
+        selectedRow.classList.add("bg-red-row");
     }
 
     selectedRow.cells[2].innerHTML = formData.kategoriTransaksi;
     selectedRow.cells[3].innerHTML = formData.jenisTransaksi;
 
-    saveData(); // Simpan perubahan setelah edit
+    saveData();
 }
 
 function saveData() {
     var table = document.getElementById("tableTransaksi").getElementsByTagName('tbody')[0];
     var data = [];
 
-    // Loop baris tabel
     for (var i = 0; i < table.rows.length; i++) {
         var row = table.rows[i];
-
-        // Bersihkan angka dari simbol sebelum disimpan
         var rawUang = row.cells[1].innerText.replace(/[^0-9]/g, '');
 
         var rowData = {
@@ -156,15 +156,13 @@ function saveData() {
         };
         data.push(rowData);
     }
-    // Simpan ke LocalStorage
-    localStorage.setItem('data', JSON.stringify(data));
 
+    localStorage.setItem('data', JSON.stringify(data));
     updateDashboard();
 }
 
 function showData() {
     var data = JSON.parse(localStorage.getItem('data')) || [];
-
     var table = document.getElementById("tableTransaksi").getElementsByTagName('tbody')[0];
     table.innerHTML = "";
 
@@ -179,7 +177,7 @@ function updateDashboard() {
     var totalPengeluaran = 0;
 
     data.forEach(function (item) {
-        var angka = parseInt(item.jumlahUang);
+        var angka = parseInt(item.jumlahUang) || 0;
         if (item.jenisTransaksi === "pemasukan") {
             totalPemasukan += angka;
         } else if (item.jenisTransaksi === "pengeluaran") {
@@ -188,8 +186,15 @@ function updateDashboard() {
     });
 
     var saldoAkhir = totalPemasukan - totalPengeluaran;
+    var elemenSaldo = document.getElementById("saldoAwal");
 
     document.getElementById("totalPemasukan").innerText = "Rp " + totalPemasukan.toLocaleString('id-ID');
     document.getElementById("totalPengeluaran").innerText = "Rp " + totalPengeluaran.toLocaleString('id-ID');
-    document.getElementById("saldoAwal").innerText = "Rp " + saldoAkhir.toLocaleString('id-ID');
+    elemenSaldo.innerText = "Rp " + saldoAkhir.toLocaleString('id-ID');
+
+    if (saldoAkhir < 0) {
+        elemenSaldo.style.color = "#F43F5E";
+    } else {
+        elemenSaldo.style.color = "#FFFFFF";
+    }
 }
